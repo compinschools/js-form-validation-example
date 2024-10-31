@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My First Web Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="formvalidation.js"></script>
+    <script>
+      function validateUid(){
+        var uid = document.myform.uid.value;
+
+        if(checkIsNumber(document.myform.uid) == false){
+          return false;
+        }
+        if(checkLength(document.myform.uid, 10) == false){
+          
+          return false;
+        }
+      }
+      function validateForm(){
+        if(validateUid() == false){
+          return false;
+        }
+        
+        if(!checkNotEmpty(document.myform.name)){
+          return false;
+        }
+
+        var pcode = document.myform.pcode.value;
+        let postRegEx = /^[A-Z]{1,2}[0-9][0-9A-Z]?\s[0-9][A-Z]{2}$/;
+        if(!postRegEx.test(pcode)){
+          alert("Post Code must be valid");
+          return false;
+        }
+
+        return true;
+      }
+
+      function validateAge() {
+        let age = document.myform.age.value;
+        if(isNaN(age) || age < 0 || age > 120){
+          document.myform.age.style.backgroundColor = "red";
+          document.myform.ageGroup.value = "";
+          return false;
+        }
+        else {
+          document.myform.age.style.backgroundColor = "white";
+          if(age < 18){
+            document.myform.ageGroup.value = "Child";
+          }
+          else if(age < 60){
+            document.myform.ageGroup.value = "Adult";
+          }
+          else {
+            document.myform.ageGroup.value = "Senior Citizen";
+          }
+          return true;
+        }
+      }
+
+      function validateBgColor() {
+        let bgColor = document.myform.bgColor.value;
+        //change the options in the textColor select depending on the bgColor
+        let colByBackground = {
+          "White": ["Black", "Yellow"],
+          "Black": ["White", "Yellow"],
+          "Yellow": ["White", "Black"]
+        };
+        
+        document.myform.textColor.innerHTML = 
+          colByBackground[bgColor].map(col => `<option value="${col}">${col}</option>`).join("");
+      }
+
+      function checkYesNo(){
+        if(document.myform.yesno.value == "yes"){
+          document.getElementById("yesexplain").style.display = "block";
+        }
+        else {
+          document.getElementById("yesexplain").style.display = "none";
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="bg-blue-700 text-white h-16 container mx-auto">
+      Header Block
+    </header> 
+    <div class="container mx-auto sm:flex h-[calc(100vh-128px)]">
+      <nav class="w-full sm:w-1/6 bg-green-500">
+        Left Navigation
+      </nav>
+      <main id="main" class="w-full sm:w-2/3 bg-gray-500">
+        Main Content
+        <form name="myform">
+          <label for="uid">User ID:</label>
+          <input type="text" name="uid" id="uid" oninput="validateUid()" required>
+          <br />
+          <label for="name">Name:</label>
+          <input type="text" name="name" id="name">
+          <br />
+          <label for="pcode">Post Code</label>
+          <input type="text" name="pcode" id="pcode">
+          <br />
+          <label for="age">Age:</label>
+          <input type="text" name="age" id="age" oninput="validateAge()" />
+          <label for="ageGroup">Age Group:</label>
+          <input type="text" name="ageGroup" id="ageGroup" readonly />
+          <br />
+          <label for="bgColor">Background Color</label>
+          <select name="bgColor" id="bgColor" onchange="validateBgColor()">
+            <option value="White">White</option>
+            <option value="Black">Black</option>
+            <option value="Yellow">Yellow</option>
+            </select> 
+            <label for="bgColor">Background Color</label>
+          <select title="Text Color" name="textColor" id="textColor">
+            <option value="Black">Black</option>
+            <option value="Yellow">Yellow</option>
+            </select> 
+          <br />
+          <label for="yesno">Yes/No</label><br />
+          Yes<input type="radio" name="yesno" id="yes" value="yes" onchange="checkYesNo()" /><br />
+          No<input type="radio" name="yesno" id="no" value="no" onchange="checkYesNo()" /><br />
+
+          <div id="yesexplain" style="display:none;">
+            <label for="yesexplain">Explain Yes</label>
+            <input type="text" name="yesexplain" id="yesexplain" />
+
+          </div>
+          <br />
+          <input type="button" value="Submit" onclick="validateForm()">
+          
+        </form>
+
+      </main>
+      <nav class="w-full sm:w-1/6 bg-yellow-500">
+        Right Navigation  
+      </nav>
+  </div>
+    <footer class="bg-red-700 text-white h-16 container mx-auto">
+      Footer Block
+    </footer>
+    
+  </body>
+</html>
